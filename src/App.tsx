@@ -82,7 +82,7 @@ const Events: React.FC<{ meetupEvents: MeetupEvent[] }> = ({meetupEvents}) => {
   return (
     <div>
       {meetupEvents.map((meetupEvent: MeetupEvent, i: number) => (
-        <article key={i}>
+        <article className="event" key={i}>
           <div><a href={meetupEvent.url}>{meetupEvent.title}</a></div>
           <time>{meetupEvent.date}</time>
           <div><a href={meetupEvent.meetupEvent_url}>{meetupEvent.meetupEvent}</a></div>
@@ -102,11 +102,11 @@ const App: React.FC = () => {
     }).then(setMeetupEvents)
   }, [country]);
   return (
-    <div className="App">
-      <div className="App-Map">
+    <div className="app">
+      <div className="app-map">
         <EventsMap meetupEvents={meetupEvents}/>
       </div>
-      <div className="App-Events">
+      <div className="app-events">
         <p><CountrySelect value={defaultCountry} onChange={ setCountry } /></p>
         <Events meetupEvents={meetupEvents}/>
       </div>

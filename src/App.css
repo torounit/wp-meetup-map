@@ -1,23 +1,26 @@
-.App {
+.app {
   display: flex;
   width: 100vw;
   height: 100vh;
 }
 
-.App-Map {
+.app-map {
   width: 70%;
   flex: 1 1 auto;
 }
 
-.App-Events {
+.app-events {
   width: 30%;
+  padding: 10px;
   flex: 1 0 auto;
   min-width: 300px;
   height: 100vh;
   overflow: auto;
 }
 
-
+.event {
+  margin-bottom: 10px;
+}
 
 .leaflet-container {
   width: 100%;
