@@ -2,8 +2,10 @@ import React from 'react';
 import './App.css';
 import {Map, TileLayer, Marker, Popup} from 'react-leaflet'
 import queryString from 'query-string'
+import CountrySelect from "./CountrySelect";
 
 const {useState, useEffect} = React;
+const defaultCountry = 'US';
 
 type APIQuery = {
   number: number
@@ -17,13 +19,13 @@ const fetchEvents = async (query: Partial<APIQuery> = {}) => {
 
   const param:APIQuery = {
     number: 20,
-    country: 'JP',
+    country: defaultCountry,
     latitude: undefined,
     longitude: undefined,
     location: undefined,
     locale: undefined
   }
-  const stringified = queryString.stringify({...query, ...param});
+  const stringified = queryString.stringify({ ...param, ...query });
   const api = `https://api.wordpress.org/events/1.0/?${stringified}`
   const response = await fetch(api)
   const {events} = await response.json()
@@ -92,15 +94,20 @@ const Events: React.FC<{ meetupEvents: MeetupEvent[] }> = ({meetupEvents}) => {
 
 const App: React.FC = () => {
   const [meetupEvents, setMeetupEvents] = useState<Array<MeetupEvent>>([]);
+  const [country, setCountry] = useState<string>(defaultCountry);
   useEffect(() => {
-    fetchEvents().then(setMeetupEvents)
-  }, []);
+    console.log(country)
+    fetchEvents({
+      country
+    }).then(setMeetupEvents)
+  }, [country]);
   return (
     <div className="App">
       <div className="App-Map">
         <EventsMap meetupEvents={meetupEvents}/>
       </div>
       <div className="App-Events">
+        <p><CountrySelect value={defaultCountry} onChange={ setCountry } /></p>
         <Events meetupEvents={meetupEvents}/>
       </div>
 
