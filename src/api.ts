@@ -20,7 +20,7 @@ type APIQuery = {
 export const fetchEvents = async (query: Partial<APIQuery> = {}) => {
 
   const param: APIQuery = {
-    number: 20,
+    number: 100,
     country: defaultCountry,
     latitude: undefined,
     longitude: undefined,

@@ -40,7 +40,6 @@ const EventsMap: React.FC<{ meetupEvents: MeetupEvent[] }> = ({meetupEvents}) =>
 
 const App: React.FC = () => {
   const [meetupEvents, setMeetupEvents] = useState<Array<MeetupEvent>>([]);
-  const [eventCount, setEventCount] = useState<number>(20);
   const [country, setCountry] = useState<string>(defaultCountry);
 
   useEffect(() => {
@@ -53,9 +52,8 @@ const App: React.FC = () => {
   useEffect(() => {
     fetchEvents({
       country,
-      number: eventCount
     }).then(setMeetupEvents)
-  }, [country, eventCount]);
+  }, [country]);
   return (
     <div className="app">
       <div className="app-map">
@@ -64,9 +62,6 @@ const App: React.FC = () => {
       <div className="app-events">
         <p>
           <CountrySelect value={country} onChange={setCountry}/>
-          Events: <input value={eventCount} type="number" min={1} max={100}  onChange={(e) => {
-            setEventCount(Number.parseInt(e.target.value))
-          }}/>
         </p>
         <Events meetupEvents={meetupEvents}/>
       </div>
