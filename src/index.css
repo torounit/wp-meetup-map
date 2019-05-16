@@ -24,6 +24,10 @@ html, body {
   height: inherit;
 }
 
-select {
+select, input {
   height: 30px;
+  font-size: 1em;
+  padding: 0;
+  box-sizing: border-box;
+
 }

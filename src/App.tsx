@@ -1,53 +1,13 @@
 import React from 'react';
 import './App.css';
 import {Map, TileLayer, Marker, Popup} from 'react-leaflet'
-import queryString from 'query-string'
 import CountrySelect from "./CountrySelect";
+import Events, {MeetupEvent} from "./Events"
+import {fetchCountryCode, fetchEvents} from './api'
+import config from './config'
 
 const {useState, useEffect} = React;
-const defaultCountry = 'US';
-
-type APIQuery = {
-  number: number
-  country: string
-  latitude?: number
-  longitude?: number
-  location?: string
-  locale?: string
-}
-const fetchEvents = async (query: Partial<APIQuery> = {}) => {
-
-  const param:APIQuery = {
-    number: 20,
-    country: defaultCountry,
-    latitude: undefined,
-    longitude: undefined,
-    location: undefined,
-    locale: undefined
-  }
-  const stringified = queryString.stringify({ ...param, ...query });
-  const api = `https://api.wordpress.org/events/1.0/?${stringified}`
-  const response = await fetch(api)
-  const {events} = await response.json()
-  return events
-}
-
-type Location = {
-  location: string
-  country: string
-  latitude: number
-  longitude: number
-}
-
-type MeetupEvent = {
-  date: string
-  location: Location
-  meetupEvent: string
-  meetupEvent_url: string
-  title: string
-  type: string
-  url: string
-}
+const {defaultCountry} = config;
 
 const EventsMap: React.FC<{ meetupEvents: MeetupEvent[] }> = ({meetupEvents}) => {
   if (meetupEvents.length > 0) {
@@ -78,36 +38,36 @@ const EventsMap: React.FC<{ meetupEvents: MeetupEvent[] }> = ({meetupEvents}) =>
   return (<div/>)
 }
 
-const Events: React.FC<{ meetupEvents: MeetupEvent[] }> = ({meetupEvents}) => {
-  return (
-    <div>
-      {meetupEvents.map((meetupEvent: MeetupEvent, i: number) => (
-        <article className="event" key={i}>
-          <div><a href={meetupEvent.url}>{meetupEvent.title}</a></div>
-          <time>{meetupEvent.date}</time>
-          <div><a href={meetupEvent.meetupEvent_url}>{meetupEvent.meetupEvent}</a></div>
-        </article>
-      ))}
-    </div>
-  )
-}
-
 const App: React.FC = () => {
   const [meetupEvents, setMeetupEvents] = useState<Array<MeetupEvent>>([]);
+  const [eventCount, setEventCount] = useState<number>(20);
   const [country, setCountry] = useState<string>(defaultCountry);
+
   useEffect(() => {
-    console.log(country)
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const code = await fetchCountryCode(position.coords.latitude, position.coords.longitude)
+      setCountry(code)
+    });
+  }, [])
+
+  useEffect(() => {
     fetchEvents({
-      country
+      country,
+      number: eventCount
     }).then(setMeetupEvents)
-  }, [country]);
+  }, [country, eventCount]);
   return (
     <div className="app">
       <div className="app-map">
         <EventsMap meetupEvents={meetupEvents}/>
       </div>
       <div className="app-events">
-        <p><CountrySelect value={defaultCountry} onChange={ setCountry } /></p>
+        <p>
+          <CountrySelect value={country} onChange={setCountry}/>
+          Events: <input value={eventCount} type="number" min={1} max={100}  onChange={(e) => {
+            setEventCount(Number.parseInt(e.target.value))
+          }}/>
+        </p>
         <Events meetupEvents={meetupEvents}/>
       </div>
 

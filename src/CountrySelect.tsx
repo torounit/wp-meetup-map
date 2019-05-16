@@ -1,7 +1,7 @@
 import React from "react";
 
 const CountrySelect: React.FC<any> = ({value, onChange}) => (
-  <select defaultValue={value} onChange={(e) => {
+  <select value={value} onChange={(e) => {
     if( onChange ) {
       onChange(e.target.value)
     }
