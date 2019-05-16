@@ -46,7 +46,7 @@ const EventsMap: React.FC<{ meetupEvents: MeetupEvent[] }> = ({meetupEvents}) =>
         {meetupEvents.map((meetupEvent: MeetupEvent, i: number) => (
           <Marker key={i} position={[meetupEvent.location.latitude, meetupEvent.location.longitude]}>
             <Popup>
-              A pretty CSS3 popup. <br/> Easily customizable.
+              <a href={meetupEvent.url}>{meetupEvent.title}</a>
             </Popup>
           </Marker>
         ))}
@@ -54,9 +54,22 @@ const EventsMap: React.FC<{ meetupEvents: MeetupEvent[] }> = ({meetupEvents}) =>
     )
   }
 
-  return (<div />)
+  return (<div/>)
 }
 
+const Events: React.FC<{ meetupEvents: MeetupEvent[] }> = ({meetupEvents}) => {
+  return (
+    <div>
+      {meetupEvents.map((meetupEvent: MeetupEvent, i: number) => (
+        <article key={i}>
+          <div><a href={meetupEvent.url}>{meetupEvent.title}</a></div>
+          <time>{meetupEvent.date}</time>
+          <div><a href={meetupEvent.meetupEvent_url}>{meetupEvent.meetupEvent}</a></div>
+        </article>
+      ))}
+    </div>
+  )
+}
 
 const App: React.FC = () => {
   const [meetupEvents, setMeetupEvents] = useState<Array<MeetupEvent>>([]);
@@ -65,14 +78,13 @@ const App: React.FC = () => {
   }, [meetupEvents]);
   return (
     <div className="App">
-      <EventsMap meetupEvents={meetupEvents}/>
-      {meetupEvents.map((meetupEvent: MeetupEvent, i: number) => (
-        <div key={i}>
-          <div><a href={meetupEvent.url}>{meetupEvent.title}</a></div>
-          <time>{meetupEvent.date}</time>
-          <div><a href={meetupEvent.meetupEvent_url}>{meetupEvent.meetupEvent}</a></div>
-        </div>
-      ))}
+      <div className="App-Map">
+        <EventsMap meetupEvents={meetupEvents}/>
+      </div>
+      <div className="App-Events">
+        <Events meetupEvents={meetupEvents}/>
+      </div>
+
     </div>
   );
 }

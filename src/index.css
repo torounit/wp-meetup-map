@@ -13,7 +13,7 @@ code {
 }
 
 html, body {
-  margin: 10px;
+  margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
@@ -22,10 +22,4 @@ html, body {
 #root {
   width: inherit;
   height: inherit;
-}
-
-
-.leaflet-container {
-  width: 100%;
-  height: 500px;
 }
