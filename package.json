@@ -10,6 +10,7 @@
     "@types/react-dom": "16.8.4",
     "@types/react-leaflet": "^2.2.1",
     "leaflet": "^1.5.1",
+    "query-string": "^6.5.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-leaflet": "^2.0.0-rc.3",

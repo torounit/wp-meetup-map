@@ -1,11 +1,30 @@
 import React from 'react';
 import './App.css';
 import {Map, TileLayer, Marker, Popup} from 'react-leaflet'
+import queryString from 'query-string'
 
 const {useState, useEffect} = React;
 
-const fetchEvents = async ({number = 20, country = 'JP'} = {}) => {
-  const api = `https://api.wordpress.org/events/1.0/?country=${country}&number=${number}`
+type APIQuery = {
+  number: number
+  country: string
+  latitude?: number
+  longitude?: number
+  location?: string
+  locale?: string
+}
+const fetchEvents = async (query: Partial<APIQuery> = {}) => {
+
+  const param:APIQuery = {
+    number: 20,
+    country: 'JP',
+    latitude: undefined,
+    longitude: undefined,
+    location: undefined,
+    locale: undefined
+  }
+  const stringified = queryString.stringify({...query, ...param});
+  const api = `https://api.wordpress.org/events/1.0/?${stringified}`
   const response = await fetch(api)
   const {events} = await response.json()
   return events
@@ -75,7 +94,7 @@ const App: React.FC = () => {
   const [meetupEvents, setMeetupEvents] = useState<Array<MeetupEvent>>([]);
   useEffect(() => {
     fetchEvents().then(setMeetupEvents)
-  }, [meetupEvents]);
+  }, []);
   return (
     <div className="App">
       <div className="App-Map">
