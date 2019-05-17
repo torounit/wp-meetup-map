@@ -1,4 +1,5 @@
 import React from "react"
+import classes from './index.module.css'
 
 export type Location = {
   location: string
@@ -21,7 +22,7 @@ const Events: React.FC<{ meetupEvents: MeetupEvent[] }> = ({ meetupEvents }) => 
   return (
     <div>
       {meetupEvents.map((meetupEvent: MeetupEvent, i: number) => (
-        <article className="event" key={i}>
+        <article className={classes.event} key={i}>
           <div>
             <a href={meetupEvent.url}>{meetupEvent.title}</a>
           </div>
