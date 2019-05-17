@@ -1,15 +1,18 @@
-import React from "react";
-import {MeetupEvent} from "../Events";
-import {Map, Marker, Popup, TileLayer} from "react-leaflet";
+import React, {Fragment} from "react"
+import { MeetupEvent } from "../Events"
+import { Map, Marker, Popup, TileLayer } from "react-leaflet"
+
+const getBounds = (meetupEvents: MeetupEvent[]): [number, number][] => {
+  return  meetupEvents.map((meetup: MeetupEvent) => {
+    const { latitude, longitude } = meetup.location
+    return [latitude, longitude]
+  })
+}
 
 const EventsMap: React.FC<{ meetupEvents: MeetupEvent[] }> = ({ meetupEvents }) => {
   if (meetupEvents.length > 0) {
-    const bounds: [number, number][] = meetupEvents.map((meetup: MeetupEvent) => {
-      const { latitude, longitude } = meetup.location
-      return [latitude, longitude]
-    })
     return (
-      <Map bounds={bounds}>
+      <Map bounds={getBounds(meetupEvents)}>
         <TileLayer
           attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -24,7 +27,6 @@ const EventsMap: React.FC<{ meetupEvents: MeetupEvent[] }> = ({ meetupEvents }) 
       </Map>
     )
   }
-
-  return <div />
+  return (<Fragment />)
 }
 export default EventsMap

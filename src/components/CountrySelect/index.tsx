@@ -669,7 +669,7 @@ const CountrySelect: React.FC<any> = ({ className, value, onChange, ...props }) 
         <option value="SU" label="Union of Soviet Socialist Republics">
           Union of Soviet Socialist Republics
         </option>
-        <option value="GB" label="United Kingdom">
+          <option value="GB" label="United Kingdom">
           United Kingdom
         </option>
         <option value="VA" label="Vatican City">

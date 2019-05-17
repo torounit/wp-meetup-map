@@ -33,3 +33,5 @@ export const fetchEvents = async (query: Partial<APIQuery> = {}) => {
   const { events } = await response.json()
   return events
 }
+
+
