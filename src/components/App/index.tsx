@@ -30,9 +30,7 @@ const Index: React.FC = () => {
     <div className={classes.app} data-app-mode={mode}>
       <header className={classes.header}>
         <h1>WordPress Meetup Map</h1>
-        <div>
-          <CountrySelect className={classes.countrySelect} value={country} onChange={setCountry} />
-        </div>
+        <CountrySelect className={classes.countrySelect} value={country} onChange={setCountry} />
       </header>
       <div className={classes.container}>
         <div className={classes.map}>
