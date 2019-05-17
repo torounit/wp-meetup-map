@@ -1,27 +1,24 @@
-import React from 'react';
-import './App.css';
-import {Map, TileLayer, Marker, Popup} from 'react-leaflet'
-import CountrySelect from "./CountrySelect";
-import Events, {MeetupEvent} from "./Events"
-import {fetchCountryCode, fetchEvents} from './api'
-import config from './config'
+import React from "react"
+import "./App.css"
+import { Map, TileLayer, Marker, Popup } from "react-leaflet"
+import CountrySelect from "./CountrySelect"
+import Events, { MeetupEvent } from "./Events"
+import { fetchCountryCode, fetchEvents } from "./api"
+import config from "./config"
 
-const {useState, useEffect} = React;
-const {defaultCountry} = config;
+const { useState, useEffect } = React
+const { defaultCountry } = config
 
-const EventsMap: React.FC<{ meetupEvents: MeetupEvent[] }> = ({meetupEvents}) => {
+const EventsMap: React.FC<{ meetupEvents: MeetupEvent[] }> = ({ meetupEvents }) => {
   if (meetupEvents.length > 0) {
     const bounds: [number, number][] = meetupEvents.map((meetup: MeetupEvent) => {
-      const {latitude, longitude} = meetup.location;
-      return [
-        latitude,
-        longitude
-      ]
+      const { latitude, longitude } = meetup.location
+      return [latitude, longitude]
     })
     return (
       <Map bounds={bounds}>
         <TileLayer
-          attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+          attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {meetupEvents.map((meetupEvent: MeetupEvent, i: number) => (
@@ -35,39 +32,38 @@ const EventsMap: React.FC<{ meetupEvents: MeetupEvent[] }> = ({meetupEvents}) =>
     )
   }
 
-  return (<div/>)
+  return <div />
 }
 
 const App: React.FC = () => {
-  const [meetupEvents, setMeetupEvents] = useState<Array<MeetupEvent>>([]);
-  const [country, setCountry] = useState<string>(defaultCountry);
+  const [meetupEvents, setMeetupEvents] = useState<Array<MeetupEvent>>([])
+  const [country, setCountry] = useState<string>(defaultCountry)
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(async (position) => {
+    navigator.geolocation.getCurrentPosition(async position => {
       const code = await fetchCountryCode(position.coords.latitude, position.coords.longitude)
       setCountry(code)
-    });
+    })
   }, [])
 
   useEffect(() => {
     fetchEvents({
       country,
     }).then(setMeetupEvents)
-  }, [country]);
+  }, [country])
   return (
     <div className="app">
       <div className="app-map">
-        <EventsMap meetupEvents={meetupEvents}/>
+        <EventsMap meetupEvents={meetupEvents} />
       </div>
       <div className="app-events">
         <p>
-          <CountrySelect value={country} onChange={setCountry}/>
+          <CountrySelect value={country} onChange={setCountry} />
         </p>
-        <Events meetupEvents={meetupEvents}/>
+        <Events meetupEvents={meetupEvents} />
       </div>
-
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
