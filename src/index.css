@@ -24,15 +24,6 @@ html, body {
   height: inherit;
 }
 
-select, input {
-  height: 30px;
-  font-size: 1em;
-  padding: 0;
-  box-sizing: border-box;
-
-}
-
-
 .leaflet-container {
   width: 100%;
   height: 100%;

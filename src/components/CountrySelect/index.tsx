@@ -1,8 +1,11 @@
 import React from "react"
+import classes from "./index.module.css"
 
-const CountrySelect: React.FC<any> = ({ value, onChange }) => (
+const CountrySelect: React.FC<any> = ({ className, value, onChange, ...props }) => (
   <select
+    {...props}
     value={value}
+    className={ `${classes.select} ${className}` }
     onChange={e => {
       if (onChange) {
         onChange(e.target.value)

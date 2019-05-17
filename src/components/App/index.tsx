@@ -28,14 +28,18 @@ const Index: React.FC = () => {
   }, [country])
   return (
     <div className={classes.app} data-app-mode={mode}>
+      <header className={classes.header}>
+        <h1>WordPress Meetup Map</h1>
+        <div>
+          <CountrySelect className={classes.countrySelect} value={country} onChange={setCountry} />
+        </div>
+      </header>
       <div className={classes.container}>
         <div className={classes.map}>
           <EventsMap meetupEvents={meetupEvents} />
         </div>
         <div className={classes.events}>
-          <p>
-            <CountrySelect value={country} onChange={setCountry} />
-          </p>
+
           <Events meetupEvents={meetupEvents} />
         </div>
       </div>

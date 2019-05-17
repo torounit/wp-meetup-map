@@ -5,6 +5,21 @@
   flex-direction: column;
 }
 
+.header {
+  color: #fff;
+  text-align: left;
+  font-weight: 700;
+  font-size: 1.2rem;
+  padding: 0 0.6em;
+  background-color: #F64060;
+
+}
+
+.header > * {
+  margin: 0.6em 0;
+  font-size: 1em;
+}
+
 .container {
   display: flex;
   flex-direction: row;
@@ -26,7 +41,9 @@
   color: #fff;
   text-align: center;
   box-sizing: border-box;
-  padding: 0.5em;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0.6em;
   box-shadow: 0 0 1px currentColor;
 }
 
