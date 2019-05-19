@@ -11,8 +11,8 @@ export type Location = {
 export type MeetupEvent = {
   date: string
   location: Location
-  meetupEvent: string
-  meetupEvent_url: string
+  meetup: string
+  meetup_url: string
   title: string
   type: string
   url: string
@@ -20,15 +20,15 @@ export type MeetupEvent = {
 
 const Events: React.FC<{ meetupEvents: MeetupEvent[] }> = ({ meetupEvents }) => {
   return (
-    <div>
+    <div className={classes.events}>
       {meetupEvents.map((meetupEvent: MeetupEvent, i: number) => (
         <article className={classes.event} key={i}>
-          <div>
+          <h1 className={classes.title}>
             <a href={meetupEvent.url}>{meetupEvent.title}</a>
-          </div>
-          <time>{meetupEvent.date}</time>
-          <div>
-            <a href={meetupEvent.meetupEvent_url}>{meetupEvent.meetupEvent}</a>
+          </h1>
+          <div className={classes.footer}>
+            <time>{meetupEvent.date}</time>
+            <a href={meetupEvent.meetup_url}>{meetupEvent.meetup}</a>
           </div>
         </article>
       ))}
