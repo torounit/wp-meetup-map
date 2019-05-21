@@ -10,6 +10,12 @@ export const fetchCountryCode = async (latitude: number, longitude: number) => {
   return result.address.country_code.toUpperCase()
 }
 
+export const fetchCountries = async () => {
+  const url = 'https://cdn.jsdelivr.net/gh/lukes/ISO-3166-Countries-with-Regional-Codes@master/all/all.json'
+  const result = await fetch( url )
+  return  await result.json()
+}
+
 type APIQuery = {
   number: number
   country: string

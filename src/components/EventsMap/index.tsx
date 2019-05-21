@@ -1,18 +1,32 @@
 import React, {Fragment} from "react"
-import { MeetupEvent } from "../Events"
-import { Map, Marker, Popup, TileLayer } from "react-leaflet"
+import {MeetupEvent} from "../Events"
+import {uniq, head} from "lodash"
+import {Map, MapProps, Marker, Popup, TileLayer} from "react-leaflet"
 
-const getBounds = (meetupEvents: MeetupEvent[]): [number, number][] => {
-  return  meetupEvents.map((meetup: MeetupEvent) => {
-    const { latitude, longitude } = meetup.location
-    return [latitude, longitude]
-  })
+type LatLng = [number, number]
+
+const getBounds = (meetupEvents: MeetupEvent[]): LatLng[] => {
+  return uniq<LatLng>(
+    meetupEvents.map((meetup: MeetupEvent) => {
+      const {latitude, longitude} = meetup.location
+      return [latitude, longitude]
+    })
+  )
 }
 
-const EventsMap: React.FC<{ meetupEvents: MeetupEvent[] }> = ({ meetupEvents }) => {
+
+const EventsMap: React.FC<{ meetupEvents: MeetupEvent[] }> = ({meetupEvents}) => {
   if (meetupEvents.length > 0) {
+    const props:Partial<MapProps> = getBounds(meetupEvents).length < 2 ? {
+      center: head<LatLng>(getBounds(meetupEvents)),
+      zoom: 13
+    } : {
+      bounds: getBounds(meetupEvents),
+    }
+
+
     return (
-      <Map bounds={getBounds(meetupEvents)}>
+      <Map {...props}>
         <TileLayer
           attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -27,6 +41,6 @@ const EventsMap: React.FC<{ meetupEvents: MeetupEvent[] }> = ({ meetupEvents }) 
       </Map>
     )
   }
-  return (<Fragment />)
+  return <Fragment/>
 }
 export default EventsMap

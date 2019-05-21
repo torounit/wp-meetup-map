@@ -31,6 +31,7 @@ const Index: React.FC = () => {
   useEffect(() => {
     (async () => {
       const events = await fetchEvents({ country })
+      console.log(events)
       setMeetupEvents(events)
     })()
   }, [country])

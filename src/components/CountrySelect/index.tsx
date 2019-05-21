@@ -1,5 +1,6 @@
 import React from "react"
 import classes from "./index.module.css"
+import { fetchCountries } from "../../api";
 
 const CountrySelect: React.FC<any> = ({ className, value, onChange, ...props }) => (
 
