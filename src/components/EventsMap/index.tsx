@@ -34,7 +34,8 @@ const EventsMap: React.FC<{ meetupEvents: MeetupEvent[] }> = ({meetupEvents}) =>
         {meetupEvents.map((meetupEvent: MeetupEvent, i: number) => (
           <Marker key={i} position={[meetupEvent.location.latitude, meetupEvent.location.longitude]}>
             <Popup>
-              <a href={meetupEvent.url}>{meetupEvent.title}</a>
+              <div><a href={meetupEvent.url}>{meetupEvent.title}</a></div>
+              <div><time>{meetupEvent.date}</time></div>
             </Popup>
           </Marker>
         ))}

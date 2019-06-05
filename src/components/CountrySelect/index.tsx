@@ -1,14 +1,28 @@
 import React from "react"
 import classes from "./index.module.css"
-import { fetchCountries } from "../../api";
+import { fetchCountries } from "../../api"
 
-const CountrySelect: React.FC<any> = ({ className, value, onChange, ...props }) => (
-
-  <div className={ `${classes.container} ${className}` }>
+const Select: React.FC<any> = ({ className, value, onChange, options, ...props }) => (
+  <div className={`${classes.container} ${className}`}>
     <select
       {...props}
       value={value}
-      className={ `${classes.select}` }
+      className={`${classes.select}`}
+      onChange={e => {
+        if (onChange) {
+          onChange(e.target.value)
+        }
+      }}
+    ></select>
+  </div>
+)
+
+const CountrySelect: React.FC<any> = ({ className, value, onChange, ...props }) => (
+  <div className={`${classes.container} ${className}`}>
+    <select
+      {...props}
+      value={value}
+      className={`${classes.select}`}
       onChange={e => {
         if (onChange) {
           onChange(e.target.value)
@@ -670,7 +684,7 @@ const CountrySelect: React.FC<any> = ({ className, value, onChange, ...props }) 
         <option value="SU" label="Union of Soviet Socialist Republics">
           Union of Soviet Socialist Republics
         </option>
-          <option value="GB" label="United Kingdom">
+        <option value="GB" label="United Kingdom">
           United Kingdom
         </option>
         <option value="VA" label="Vatican City">

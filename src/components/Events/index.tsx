@@ -28,7 +28,7 @@ const Events: React.FC<{ meetupEvents: MeetupEvent[] }> = ({ meetupEvents }) => 
           </h1>
           <div className={classes.footer}>
             <time>{meetupEvent.date}</time>
-            <a href={meetupEvent.meetup_url}>{meetupEvent.meetup}</a>
+            <a href={meetupEvent.meetup_url} target="_blank">{meetupEvent.meetup}</a>
           </div>
         </article>
       ))}
