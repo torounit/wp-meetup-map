@@ -1,5 +1,5 @@
 import React from "react"
-import classes from './index.module.css'
+import classes from "./index.module.css"
 
 export type Location = {
   location: string
@@ -28,7 +28,9 @@ const Events: React.FC<{ meetupEvents: MeetupEvent[] }> = ({ meetupEvents }) => 
           </h1>
           <div className={classes.footer}>
             <time>{meetupEvent.date}</time>
-            <a href={meetupEvent.meetup_url} target="_blank">{meetupEvent.meetup}</a>
+            <a href={meetupEvent.meetup_url} rel="noopener noreferrer" target="_blank">
+              {meetupEvent.meetup}
+            </a>
           </div>
         </article>
       ))}
