@@ -3,6 +3,7 @@ import { MeetupEvent } from "../Events"
 import { uniq, head } from "lodash"
 import { Map, MapProps, Marker, Popup, TileLayer } from "react-leaflet"
 import classes from "./index.module.css"
+import DateTime from "../DateTime";
 
 type LatLng = [number, number]
 
@@ -38,10 +39,10 @@ const EventsMap: React.FC<{ meetupEvents: MeetupEvent[] }> = ({ meetupEvents }) 
             <Popup>
               <div className={classes.popup}>
                 <h2 className={classes.popupTitle}>
-                  <a href={meetupEvent.url}>{meetupEvent.title}</a>
+                  <a href={meetupEvent.url} rel="noopener noreferrer" target="_blank">{meetupEvent.title}</a>
                 </h2>
                 <p>
-                  <time>{meetupEvent.date}</time>
+                  <DateTime datetime={meetupEvent.date} format={ 'YYYY/MM/DD HH:mm'} />
                 </p>
                 {meetupEvent.meetup_url && meetupEvent.meetup ? (
                   <p>
