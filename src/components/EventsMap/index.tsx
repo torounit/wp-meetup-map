@@ -1,19 +1,20 @@
 import React, { Fragment } from "react"
 import { MeetupEvent } from "../Events"
-import { uniq, head } from "lodash"
+import { uniqWith, head, isEqual } from "lodash"
 import { Map, MapProps, Marker, Popup, TileLayer } from "react-leaflet"
 import classes from "./index.module.css"
-import DateTime from "../DateTime";
+import DateTime from "../DateTime"
 
 type LatLng = [number, number]
 
-const getBounds = (meetupEvents: MeetupEvent[]): LatLng[] => {
-  return uniq<LatLng>(
-    meetupEvents.map((meetup: MeetupEvent) => {
+export const getBounds = (meetupEvents: MeetupEvent[]): LatLng[] => {
+  const locations = meetupEvents.map(
+    (meetup: MeetupEvent): LatLng => {
       const { latitude, longitude } = meetup.location
       return [latitude, longitude]
-    })
+    }
   )
+  return uniqWith<LatLng>(locations, isEqual)
 }
 
 const EventsMap: React.FC<{ meetupEvents: MeetupEvent[] }> = ({ meetupEvents }) => {
@@ -27,7 +28,6 @@ const EventsMap: React.FC<{ meetupEvents: MeetupEvent[] }> = ({ meetupEvents }) 
         : {
             bounds: getBounds(meetupEvents),
           }
-
     return (
       <Map {...props}>
         <TileLayer
@@ -39,10 +39,12 @@ const EventsMap: React.FC<{ meetupEvents: MeetupEvent[] }> = ({ meetupEvents }) 
             <Popup>
               <div className={classes.popup}>
                 <h2 className={classes.popupTitle}>
-                  <a href={meetupEvent.url} rel="noopener noreferrer" target="_blank">{meetupEvent.title}</a>
+                  <a href={meetupEvent.url} rel="noopener noreferrer" target="_blank">
+                    {meetupEvent.title}
+                  </a>
                 </h2>
                 <p>
-                  <DateTime datetime={meetupEvent.date} format={ 'YYYY/MM/DD HH:mm'} />
+                  <DateTime datetime={meetupEvent.date} format={"YYYY/MM/DD HH:mm"} />
                 </p>
                 {meetupEvent.meetup_url && meetupEvent.meetup ? (
                   <p>

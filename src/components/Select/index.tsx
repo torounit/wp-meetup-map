@@ -1,7 +1,7 @@
 import React, { Fragment, SelectHTMLAttributes, ChangeEvent } from "react"
-import classes from "../CountrySelect/index.module.css"
+import classes from "./index.module.css"
 
-type OptionProp = {
+export type OptionProp = {
   label: string
   value: string
 }
@@ -14,6 +14,7 @@ export type OptionsProps = GroupedOptions | Array<OptionProp>
 
 interface Props extends SelectHTMLAttributes<Element> {
   options: OptionsProps
+  label?: string
   onChange?: (event: ChangeEvent<HTMLSelectElement>) => void
 }
 
@@ -39,24 +40,25 @@ const OptGroup: React.FC<{ options: GroupedOptions }> = ({ options }) => {
   )
 }
 
-const isGroupedOptions = (options: any): options is GroupedOptions => typeof options === "object"
+const isOptionProps = (options: any): options is OptionProp[] => Array.isArray(options)
 
-const Select: React.FC<Props> = ({ className, value, onChange, options, ...props }) => {
+const Select: React.FC<Props> = ({ label, className, value, onChange, options, ...props }) => {
   return (
-    <div className={`${classes.container} ${className}`}>
+    <label className={`${classes.container} ${className}`}>
+      <span className={classes.labelText}>{label}</span>
       <select
         {...props}
         value={value}
-        className={`${classes.select}`}
+        className={classes.select}
         onChange={(e: ChangeEvent<HTMLSelectElement>) => {
           if (onChange) {
             onChange(e)
           }
         }}
       >
-        {isGroupedOptions(options) ? <OptGroup options={options} /> : <Options options={options} />}
+        {isOptionProps(options) ? <Options options={options} /> : <OptGroup options={options} />}
       </select>
-    </div>
+    </label>
   )
 }
 

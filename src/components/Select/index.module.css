@@ -2,6 +2,10 @@
   color: currentColor;
   border-bottom: 1px solid currentColor;
   padding: 0 0 2px;
+  display: block;
+  font-size: 0.875rem;
+  font-weight: normal;
+  margin: 0.75em 0;
 }
 
 .select {
@@ -9,8 +13,12 @@
   width: 100%;
   background-color: transparent;
   color: currentColor;
-
-  font-size: 0.875rem;
   border-radius: 0;
+  font-size: 0.875rem;
+}
 
+.labelText {
+  font-size: 0.75rem;
+  display: block;
+  margin-bottom: 0.4em;
 }

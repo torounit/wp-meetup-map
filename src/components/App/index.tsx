@@ -1,18 +1,37 @@
 import React from "react"
 import CountrySelect from "../CountrySelect"
-import Events, { MeetupEvent } from "../Events"
+import Events, {MeetupEvent} from "../Events"
 import EventsMap from "../EventsMap"
-import { fetchCountryCode, fetchEvents } from "../../api"
+import {fetchCountryCode, fetchEvents} from "../../api"
 import config from "../../config"
 import classes from "./index.module.css"
-import { getCurrentPosition, parseQuery } from "../../utility"
+import {getCurrentPosition, parseQuery} from "../../utility"
+import NotFound from "./NotFound"
+import Select, {OptionProp} from "../Select"
+import {chain, isEqual} from "lodash"
 
 const { useState, useEffect } = React
 const { defaultCountry } = config
 
+const getMeetups = (meetupEvents: MeetupEvent[]): Array<{ meetup: string; meetup_url: string }> =>
+  chain<MeetupEvent>(meetupEvents)
+    .filter(({ meetup }) => !!meetup)
+    .map(({ meetup, meetup_url }) => ({
+      meetup,
+      meetup_url,
+    }))
+    .uniqWith(isEqual)
+    .value()
+
+const createMeetupOptionProps = (meetupEvents: MeetupEvent[]): Array<OptionProp> => {
+  const options = getMeetups(meetupEvents).map(({ meetup }) => ({ label: meetup, value: meetup }))
+  return [ { label: 'All', value: "" }, ...options]
+}
+
 const Index: React.FC = () => {
   const [meetupEvents, setMeetupEvents] = useState<Array<MeetupEvent>>([])
   const [country, setCountry] = useState<string>(defaultCountry)
+  const [meetup, setMeetup] = useState<string>("")
   const [mode, setMode] = useState<"map" | "events">("map")
 
   useEffect(() => {
@@ -35,33 +54,33 @@ const Index: React.FC = () => {
     })()
   }, [country])
 
+  useEffect(() => {
+    setMeetup("")
+  }, [meetupEvents])
+
+  const events = meetupEvents.filter( (meetupEvent) => {
+    if (!meetup) {
+      return true
+    }
+    return meetupEvent.meetup && meetupEvent.meetup.includes(meetup);
+  })
+
   return (
     <div className={classes.app} data-app-mode={mode}>
       <header className={classes.header}>
-        <h1>WordPress Meetup Map</h1>
-        <CountrySelect className={classes.countrySelect} value={country} onChange={setCountry} />
+        <h1 className={classes.title}>WordPress Meetup Map</h1>
+        <CountrySelect label="Country" className={classes.countrySelect} value={country} onChange={setCountry} />
+        <Select label="Meetup" options={createMeetupOptionProps(meetupEvents)} onChange={(e) => setMeetup(e.target.value)} />
       </header>
       <main className={classes.container}>
         <div className={classes.map}>
-          {meetupEvents.length > 0 ? (
-            <EventsMap meetupEvents={meetupEvents} />
-          ) : (
-            <div className={classes.notFound}>
-              <div>
-                <p>Sorry, no meetup events found.</p>
-                <p>
-                  If there is not a meetup group in your city but you would like to start one,{" "}
-                  <a rel="noopener noreferrer" target="_blank" href="https://make.wordpress.org/community/handbook/meetup-organizer/getting-started/interest-form/">
-                    fill out our meetup interest form
-                  </a>{" "}
-                  and we can set up a new group for your city and make you the first organizer.{" "}
-                </p>
-              </div>
-            </div>
-          )}
+          {meetupEvents.length > 0 ?
+            <EventsMap meetupEvents={events} /> :
+            <NotFound />
+          }
         </div>
         <div className={classes.events}>
-          <Events meetupEvents={meetupEvents} />
+          <Events meetupEvents={events} />
         </div>
       </main>
       <footer className={classes.footer}>
