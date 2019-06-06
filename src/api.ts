@@ -1,5 +1,6 @@
 import queryString from "query-string"
 import config from "./config"
+
 const { defaultCountry } = config
 
 export const fetchCountryCode = async (latitude: number, longitude: number) => {
@@ -10,10 +11,24 @@ export const fetchCountryCode = async (latitude: number, longitude: number) => {
   return result.address.country_code.toUpperCase()
 }
 
-export const fetchCountries = async () => {
-  const url = 'https://cdn.jsdelivr.net/gh/lukes/ISO-3166-Countries-with-Regional-Codes@master/all/all.json'
-  const result = await fetch( url )
-  return  await result.json()
+type Country = {
+  name: string
+  "alpha-2": string
+  "alpha-3": string
+  "country-code": string
+  "iso_3166-2": string
+  region: string
+  "sub-region": string
+  "intermediate-region": string
+  "region-code": string
+  "sub-region-code": string
+  "intermediate-region-code": string
+}
+
+export const fetchCountries = async (): Promise<Array<Country>> => {
+  const url = "https://cdn.jsdelivr.net/gh/lukes/ISO-3166-Countries-with-Regional-Codes@master/all/all.json"
+  const result = await fetch(url)
+  return await result.json()
 }
 
 type APIQuery = {
@@ -39,5 +54,3 @@ export const fetchEvents = async (query: Partial<APIQuery> = {}) => {
   const { events } = await response.json()
   return events
 }
-
-
