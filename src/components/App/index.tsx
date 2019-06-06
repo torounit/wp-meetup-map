@@ -69,8 +69,8 @@ const Index: React.FC = () => {
     <div className={classes.app} data-app-mode={mode}>
       <header className={classes.header}>
         <h1 className={classes.title}>WordPress Meetup Map</h1>
-        <CountrySelect label="Country" className={classes.countrySelect} value={country} onChange={setCountry} />
-        <Select label="Meetup" options={createMeetupOptionProps(meetupEvents)} onChange={(e) => setMeetup(e.target.value)} />
+        <CountrySelect label="Country:" className={classes.countrySelect} value={country} onChange={setCountry} />
+        <Select label="Meetup:" options={createMeetupOptionProps(meetupEvents)} onChange={(e) => setMeetup(e.target.value)} />
       </header>
       <main className={classes.container}>
         <div className={classes.map}>
