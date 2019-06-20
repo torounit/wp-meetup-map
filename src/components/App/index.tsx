@@ -5,47 +5,42 @@ import EventsMap from "../EventsMap"
 import {fetchCountryCode, fetchEvents} from "../../api"
 import config from "../../config"
 import classes from "./index.module.css"
-import {getCurrentPosition, parseQuery} from "../../utility"
+import {getCountryFromLocalStrage, getCurrentPosition, parseQuery, setCountryFromLocalStrage} from "../../utility"
 import NotFound from "./NotFound"
-import Select, {OptionProp} from "../Select"
-import {chain, isEqual} from "lodash"
 import Notes from "./Notes";
+import MeetupSelect from "./MeetupSelect";
 
 const {useState, useEffect} = React
 const {defaultCountry} = config
 
-const getMeetups = (meetupEvents: MeetupEvent[]): Array<{ meetup: string; meetup_url: string }> =>
-  chain<MeetupEvent>(meetupEvents)
-    .filter(({meetup}) => !!meetup)
-    .map(({meetup, meetup_url}) => ({
-      meetup,
-      meetup_url,
-    }))
-    .uniqWith(isEqual)
-    .value()
-
-const createMeetupOptionProps = (meetupEvents: MeetupEvent[]): Array<OptionProp> => {
-  const options = getMeetups(meetupEvents).map(({meetup}) => ({label: meetup, value: meetup}))
-  return [{label: 'All', value: ""}, ...options]
-}
-
 const Index: React.FC = () => {
   const [meetupEvents, setMeetupEvents] = useState<Array<MeetupEvent>>([])
   const [country, setCountry] = useState<string>(defaultCountry)
+
+  const saveCountry = (state: string) => {
+    setCountry(state)
+    setCountryFromLocalStrage(state)
+  }
+
   const [meetup, setMeetup] = useState<string>("")
   const [showNotes, setShowNotes] = useState<boolean>(false)
   const [mode, setMode] = useState<"map" | "events">("map")
 
   useEffect(() => {
     (async () => {
-      const {country} = parseQuery()
-      if (country && typeof country === "string") {
-        setCountry(country.toUpperCase())
-      } else {
-        const position = await getCurrentPosition()
-        const code = await fetchCountryCode(position.coords.latitude, position.coords.longitude)
-        setCountry(code)
+      const query = parseQuery()
+      if (query.country && typeof query.country === "string") {
+        saveCountry(query.country.toUpperCase())
+        return;
       }
+      const country = getCountryFromLocalStrage();
+      if (country) {
+        setCountry(country)
+        return;
+      }
+      const position = await getCurrentPosition()
+      const code = await fetchCountryCode(position.coords.latitude, position.coords.longitude)
+      saveCountry(code)
     })()
   }, [])
 
@@ -83,9 +78,8 @@ const Index: React.FC = () => {
           </svg>
           <span className={classes.screenReaderText}>notes</span>
         </button>
-        <CountrySelect label="Country:" className={classes.countrySelect} value={country} onChange={setCountry}/>
-        <Select label="Meetup:" options={createMeetupOptionProps(meetupEvents)}
-                onChange={(e) => setMeetup(e.target.value)}/>
+        <CountrySelect label="Country:" className={classes.countrySelect} value={country} onChange={saveCountry}/>
+        <MeetupSelect label="Meetup:" meetupEvents={meetupEvents} onChange={(e) => setMeetup(e.target.value)}/>
       </header>
       <main className={classes.container}>
         <div className={classes.map}>

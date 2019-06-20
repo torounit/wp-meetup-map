@@ -12,7 +12,7 @@ type GroupedOptions = {
 
 export type OptionsProps = GroupedOptions | Array<OptionProp>
 
-interface Props extends SelectHTMLAttributes<Element> {
+export interface Props extends SelectHTMLAttributes<Element> {
   options: OptionsProps
   label?: string
   onChange?: (event: ChangeEvent<HTMLSelectElement>) => void
