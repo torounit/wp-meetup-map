@@ -12,7 +12,7 @@ import EventsView from "./EventsView";
 const {useState, useEffect} = React
 const {defaultCountry} = config
 
-const getCountryCode = async (): Promise<string> => {
+const getCountryCode = (): string => {
   const query = parseQuery()
   if (query.country && typeof query.country === "string") {
     return query.country.toUpperCase()
@@ -21,12 +21,12 @@ const getCountryCode = async (): Promise<string> => {
   if (country) {
     return country
   }
-  const position = await getCurrentPosition()
-  return await fetchCountryCode(position.coords.latitude, position.coords.longitude)
+  return ''
 }
 
+
 const Index: React.FC = () => {
-  const [country, setCountry] = useState<string>(defaultCountry)
+  const [country, setCountry] = useState<string>(getCountryCode() || defaultCountry)
 
   const saveCountry = (state: string) => {
     setCountry(state)
@@ -35,8 +35,16 @@ const Index: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      const code = await getCountryCode();
-      saveCountry(code)
+      let code = getCountryCode();
+      if (code) {
+        saveCountry(code)
+      }
+      else {
+        const position = await getCurrentPosition()
+        code = await fetchCountryCode(position.coords.latitude, position.coords.longitude)
+        saveCountry(code)
+      }
+
     })()
   }, [])
 
