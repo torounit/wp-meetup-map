@@ -9,14 +9,15 @@ import {getCurrentPosition, parseQuery} from "../../utility"
 import NotFound from "./NotFound"
 import Select, {OptionProp} from "../Select"
 import {chain, isEqual} from "lodash"
+import Notes from "../Notes";
 
-const { useState, useEffect } = React
-const { defaultCountry } = config
+const {useState, useEffect} = React
+const {defaultCountry} = config
 
 const getMeetups = (meetupEvents: MeetupEvent[]): Array<{ meetup: string; meetup_url: string }> =>
   chain<MeetupEvent>(meetupEvents)
-    .filter(({ meetup }) => !!meetup)
-    .map(({ meetup, meetup_url }) => ({
+    .filter(({meetup}) => !!meetup)
+    .map(({meetup, meetup_url}) => ({
       meetup,
       meetup_url,
     }))
@@ -24,19 +25,20 @@ const getMeetups = (meetupEvents: MeetupEvent[]): Array<{ meetup: string; meetup
     .value()
 
 const createMeetupOptionProps = (meetupEvents: MeetupEvent[]): Array<OptionProp> => {
-  const options = getMeetups(meetupEvents).map(({ meetup }) => ({ label: meetup, value: meetup }))
-  return [ { label: 'All', value: "" }, ...options]
+  const options = getMeetups(meetupEvents).map(({meetup}) => ({label: meetup, value: meetup}))
+  return [{label: 'All', value: ""}, ...options]
 }
 
 const Index: React.FC = () => {
   const [meetupEvents, setMeetupEvents] = useState<Array<MeetupEvent>>([])
   const [country, setCountry] = useState<string>(defaultCountry)
   const [meetup, setMeetup] = useState<string>("")
+  const [showNotes, setShowNotes] = useState<boolean>(false)
   const [mode, setMode] = useState<"map" | "events">("map")
 
   useEffect(() => {
     (async () => {
-      const { country } = parseQuery()
+      const {country} = parseQuery()
       if (country && typeof country === "string") {
         setCountry(country.toUpperCase())
       } else {
@@ -49,7 +51,7 @@ const Index: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      const events = await fetchEvents({ country })
+      const events = await fetchEvents({country})
       setMeetupEvents(events)
     })()
   }, [country])
@@ -58,35 +60,51 @@ const Index: React.FC = () => {
     setMeetup("")
   }, [meetupEvents])
 
-  const events = meetupEvents.filter( (meetupEvent) => {
+  const events = meetupEvents.filter((meetupEvent) => {
     if (!meetup) {
       return true
     }
     return meetupEvent.meetup && meetupEvent.meetup.includes(meetup);
   })
 
+  const toggleShowNotes = () => {
+    setShowNotes(!showNotes)
+  }
+
   return (
     <div className={classes.app} data-app-mode={mode}>
       <header className={classes.header}>
         <h1 className={classes.title}>WordPress Meetup Map</h1>
-        <CountrySelect label="Country:" className={classes.countrySelect} value={country} onChange={setCountry} />
-        <Select label="Meetup:" options={createMeetupOptionProps(meetupEvents)} onChange={(e) => setMeetup(e.target.value)} />
+        <button className={classes.notesButton} onClick={toggleShowNotes}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path
+              d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+          </svg>
+          <span className={classes.screenReaderText}>notes</span>
+        </button>
+        <CountrySelect label="Country:" className={classes.countrySelect} value={country} onChange={setCountry}/>
+        <Select label="Meetup:" options={createMeetupOptionProps(meetupEvents)}
+                onChange={(e) => setMeetup(e.target.value)}/>
       </header>
       <main className={classes.container}>
         <div className={classes.map}>
           {meetupEvents.length > 0 ?
-            <EventsMap meetupEvents={events} /> :
-            <NotFound />
+            <EventsMap meetupEvents={events}/> :
+            <NotFound/>
           }
         </div>
         <div className={classes.events}>
-          <Events meetupEvents={events} />
+          <Events meetupEvents={events}/>
         </div>
       </main>
       <footer className={classes.footer}>
-        <button onClick={() => setMode("map")}>Map</button>
-        <button onClick={() => setMode("events")}>Events</button>
+        <div className={classes.menu}>
+          <button onClick={() => setMode("map")}>Map</button>
+          <button onClick={() => setMode("events")}>Events</button>
+        </div>
       </footer>
+      {showNotes && <Notes onClose={() => setShowNotes(false)}/>}
     </div>
   )
 }

@@ -14,7 +14,30 @@
   font-size: 1.2rem;
   padding: 0 0.6em;
   background-color: #F64060;
+}
 
+.notesButton {
+  background-color: transparent;
+  color: inherit;
+  border: none;
+  position: absolute;
+  right: 0;
+  top: 4px;
+  padding: 6px 7px;
+}
+
+.notesButton svg {
+  fill: currentColor;
+}
+
+.screen-reader-text,
+.screenReaderText {
+  position: absolute !important;
+  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+  overflow: hidden;
+  height: 1px;
+  width: 1px;
 }
 
 .header .title {
@@ -30,13 +53,20 @@
   flex: 1 1 auto;
 }
 
-.footer {
+
+.menu {
   position: relative;
   z-index: 2;
   display: flex;
 }
 
-.footer button {
+@media (min-width:1000px) {
+  .menu {
+    display: none;
+  }
+}
+
+.menu button {
   width: 50%;
   border: none;
   background-color: #F64060;
@@ -49,11 +79,6 @@
   box-shadow: 0 0 1px currentColor;
 }
 
-@media (min-width:1000px) {
-  .footer {
-    display: none;
-  }
-}
 
 .map {
   width: 70%;
@@ -95,4 +120,17 @@
   height: 100%;
   box-sizing: border-box;
   padding: 20px;
+}
+
+.info {
+  font-size: 0.625em;
+  margin: 0;
+  padding: 0.5em;
+  background-color: #F64060;
+  color: #fff;
+}
+
+.info a {
+  text-decoration: underline;
+  color: inherit;
 }

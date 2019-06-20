@@ -1,0 +1,28 @@
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 500;
+  background-color: #fff;
+  box-shadow: 0 0 4px 4px rgba(0,0,0,.2);
+}
+
+.close {
+  margin-left: auto;
+  display: block;
+  padding: 6px;
+  background-color: transparent;
+  border: none;
+}
+
+.close svg {
+  display: block;
+  width: 1.5em;
+  height: 1.5em;
+}
+
+.body {
+  margin: 0 1.2em;
+  font-size: 0.7em;
+}

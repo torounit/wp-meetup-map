@@ -1,4 +1,4 @@
-import React, { Fragment } from "react"
+import React from "react"
 import moment from "moment"
 
 const DateTime: React.FC<{ datetime: string; format?: string }> = ({ datetime, format = undefined }) => (
