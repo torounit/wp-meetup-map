@@ -9,7 +9,7 @@ import {getCurrentPosition, parseQuery} from "../../utility"
 import NotFound from "./NotFound"
 import Select, {OptionProp} from "../Select"
 import {chain, isEqual} from "lodash"
-import Notes from "../Notes";
+import Notes from "./Notes";
 
 const {useState, useEffect} = React
 const {defaultCountry} = config

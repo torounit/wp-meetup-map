@@ -10,6 +10,8 @@
 
 .close {
   margin-left: auto;
+  right: 0;
+  position: absolute;
   display: block;
   padding: 6px;
   background-color: transparent;
@@ -24,5 +26,15 @@
 
 .body {
   margin: 0 1.2em;
-  font-size: 0.7em;
+  font-size: 0.82em;
+}
+
+
+.body h4 {
+  font-weight: bold;
+  margin: 2em 0 1em;
+}
+
+.body table {
+  border-collapse: collapse;
 }
