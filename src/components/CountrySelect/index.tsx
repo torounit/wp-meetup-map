@@ -1,35 +1,32 @@
 import React from "react"
-import { fetchCountries } from "../../api"
-import Select, { OptionsProps } from "../Select"
-import { groupBy } from "lodash"
+import Select from "../Select"
+import {groupBy} from "lodash"
+import countries from "ISO-3166-Countries-with-Regional-Codes/all/all.json"
 
-const { useState, useEffect } = React
+type CountryData = {
+  label: string,
+  value: string,
+  group: string,
+}
 
-const CountrySelect: React.FC<any> = ({ value, onChange, ...props }) => {
-  const [countries, setCountries] = useState<OptionsProps>({})
+const CountrySelect: React.FC<any> = ({value, onChange, ...props}) => {
+  const groupedCountries = groupBy<CountryData>(
+    countries
+      .map(country => {
+        const {name, region} = country
+        return {
+          value: country["alpha-2"],
+          label: name,
+          group: region,
+        }
+      })
+      .filter(({group}) => group),
+    "group"
+  )
 
-  useEffect(() => {
-    ;(async () => {
-      const countries = await fetchCountries()
-      const groupedCountries = groupBy<{ value: string; label: string; region: string }>(
-        countries
-          .map(country => {
-            const { name, region } = country
-            return {
-              value: country["alpha-2"],
-              label: name,
-              region,
-            }
-          })
-          .filter(({ region }) => region),
-        "region"
-      )
-      setCountries(groupedCountries)
-    })()
-  }, [])
   return (
     <Select
-      options={countries}
+      options={groupedCountries}
       value={value}
       onChange={e => {
         if (onChange) {

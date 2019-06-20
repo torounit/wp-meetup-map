@@ -1,20 +1,31 @@
 import React from "react"
 import CountrySelect from "../CountrySelect"
-import Events, {MeetupEvent} from "../Events"
-import EventsMap from "../EventsMap"
+import {MeetupEvent} from "../Events"
 import {fetchCountryCode, fetchEvents} from "../../api"
 import config from "../../config"
 import classes from "./index.module.css"
 import {getCountryFromLocalStrage, getCurrentPosition, parseQuery, setCountryFromLocalStrage} from "../../utility"
-import NotFound from "./NotFound"
 import Notes from "./Notes";
 import MeetupSelect from "./MeetupSelect";
+import EventsView from "./EventsView";
 
 const {useState, useEffect} = React
 const {defaultCountry} = config
 
+const getCountryCode = async (): Promise<string> => {
+  const query = parseQuery()
+  if (query.country && typeof query.country === "string") {
+    return query.country.toUpperCase()
+  }
+  const country = getCountryFromLocalStrage();
+  if (country) {
+    return country
+  }
+  const position = await getCurrentPosition()
+  return await fetchCountryCode(position.coords.latitude, position.coords.longitude)
+}
+
 const Index: React.FC = () => {
-  const [meetupEvents, setMeetupEvents] = useState<Array<MeetupEvent>>([])
   const [country, setCountry] = useState<string>(defaultCountry)
 
   const saveCountry = (state: string) => {
@@ -22,55 +33,46 @@ const Index: React.FC = () => {
     setCountryFromLocalStrage(state)
   }
 
-  const [meetup, setMeetup] = useState<string>("")
-  const [showNotes, setShowNotes] = useState<boolean>(false)
-  const [mode, setMode] = useState<"map" | "events">("map")
-
   useEffect(() => {
     (async () => {
-      const query = parseQuery()
-      if (query.country && typeof query.country === "string") {
-        saveCountry(query.country.toUpperCase())
-        return;
-      }
-      const country = getCountryFromLocalStrage();
-      if (country) {
-        setCountry(country)
-        return;
-      }
-      const position = await getCurrentPosition()
-      const code = await fetchCountryCode(position.coords.latitude, position.coords.longitude)
+      const code = await getCountryCode();
       saveCountry(code)
     })()
   }, [])
 
+  const [meetupEvents, setMeetupEvents] = useState<Array<MeetupEvent>>([])
   useEffect(() => {
     (async () => {
-      const events = await fetchEvents({country})
-      setMeetupEvents(events)
+      if (country) {
+        const events = await fetchEvents({country})
+        setMeetupEvents(events)
+      }
     })()
   }, [country])
 
+  const [meetup, setMeetup] = useState<string>("")
+  useEffect(() => setMeetup(""), [meetupEvents])
+
+  const [selectedEvents, setSelectedEvents] = useState<Array<MeetupEvent>>([])
+
   useEffect(() => {
-    setMeetup("")
-  }, [meetupEvents])
+    const filteredEvents = meetupEvents.filter((meetupEvent) => {
+      if (!meetup) {
+        return true
+      }
+      return meetupEvent.meetup && meetupEvent.meetup.includes(meetup);
+    })
+    setSelectedEvents(filteredEvents)
+  }, [meetup, meetupEvents])
 
-  const events = meetupEvents.filter((meetupEvent) => {
-    if (!meetup) {
-      return true
-    }
-    return meetupEvent.meetup && meetupEvent.meetup.includes(meetup);
-  })
-
-  const toggleShowNotes = () => {
-    setShowNotes(!showNotes)
-  }
+  const [mode, setMode] = useState<"map" | "events">("map")
+  const [showNotes, setShowNotes] = useState<boolean>(false)
 
   return (
     <div className={classes.app} data-app-mode={mode}>
       <header className={classes.header}>
         <h1 className={classes.title}>WordPress Meetup Map</h1>
-        <button className={classes.notesButton} onClick={toggleShowNotes}>
+        <button className={classes.notesButton} onClick={() => setShowNotes(!showNotes)}>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
             <path d="M0 0h24v24H0z" fill="none"/>
             <path
@@ -81,16 +83,8 @@ const Index: React.FC = () => {
         <CountrySelect label="Country:" className={classes.countrySelect} value={country} onChange={saveCountry}/>
         <MeetupSelect label="Meetup:" meetupEvents={meetupEvents} onChange={(e) => setMeetup(e.target.value)}/>
       </header>
-      <main className={classes.container}>
-        <div className={classes.map}>
-          {meetupEvents.length > 0 ?
-            <EventsMap meetupEvents={events}/> :
-            <NotFound/>
-          }
-        </div>
-        <div className={classes.events}>
-          <Events meetupEvents={events}/>
-        </div>
+      <main className={classes.main}>
+        <EventsView meetupEvents={selectedEvents}/>
       </main>
       <footer className={classes.footer}>
         <div className={classes.menu}>

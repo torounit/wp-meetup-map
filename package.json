@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@types/webpack-env": "^1.13.9",
+    "napa": "^3.0.0",
     "prettier": "^1.17.1",
     "tslint": "^5.16.0",
     "tslint-config-prettier": "^1.18.0",
@@ -31,6 +32,7 @@
     "tslint-plugin-prettier": "^2.0.1"
   },
   "scripts": {
+    "install": "napa lukes/ISO-3166-Countries-with-Regional-Codes",
     "start": "react-app-rewired start",
     "build": "react-app-rewired  build",
     "test": "react-app-rewired test"
