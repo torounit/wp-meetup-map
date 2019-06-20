@@ -15,6 +15,16 @@ module.exports = function override(config, env) {
               maxAgeSeconds: 60 * 60 * 24
             }
           }
+        },
+        {
+          urlPattern: /^https:\/\/cdn\.jsdelivr\.net\/.+/,
+          handler: 'cacheFirst',
+          options: {
+            cacheName: 'jsdelivr',
+            expiration: {
+              maxAgeSeconds: 60 * 60 * 24
+            }
+          }
         }
       ],
     };
