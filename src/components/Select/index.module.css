@@ -20,6 +20,11 @@
   font-size: 0.875rem;
 }
 
+.select option,
+.select optgroup {
+  color: initial;
+}
+
 .labelText {
   font-size: 0.7rem;
   display: block;
