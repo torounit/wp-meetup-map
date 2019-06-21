@@ -34,7 +34,7 @@ const EventsMap: React.FC<{ meetupEvents: MeetupEvent[] }> = ({ meetupEvents }) 
           attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {meetupEvents.map((meetupEvent: MeetupEvent, i: number) => (
+        {meetupEvents.reverse().map((meetupEvent: MeetupEvent, i: number) => (
           <Marker key={i} position={[meetupEvent.location.latitude, meetupEvent.location.longitude]}>
             <Popup>
               <div className={classes.popup}>
