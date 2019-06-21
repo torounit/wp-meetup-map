@@ -1,6 +1,6 @@
 import React, { Fragment } from "react"
 import { MeetupEvent } from "../Events"
-import { uniqWith, head, isEqual } from "lodash"
+import { uniqWith, head, isEqual, reverse } from "lodash"
 import { Map, MapProps, Marker, Popup, TileLayer } from "react-leaflet"
 import classes from "./index.module.css"
 import DateTime from "../DateTime"
@@ -34,7 +34,7 @@ const EventsMap: React.FC<{ meetupEvents: MeetupEvent[] }> = ({ meetupEvents }) 
           attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {meetupEvents.reverse().map((meetupEvent: MeetupEvent, i: number) => (
+        {reverse([...meetupEvents]).map((meetupEvent: MeetupEvent, i: number) => (
           <Marker key={i} position={[meetupEvent.location.latitude, meetupEvent.location.longitude]}>
             <Popup>
               <div className={classes.popup}>
