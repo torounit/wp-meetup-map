@@ -17,5 +17,5 @@ About WordPress Meetup: [https://make.wordpress.org/community/handbook/meetup-or
 
 ## License
 
-MIT.
+GPL v3 or Later.
 
