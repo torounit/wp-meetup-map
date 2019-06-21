@@ -4,7 +4,7 @@ import {MeetupEvent} from "../Events"
 import {fetchCountryCode, fetchEvents} from "../../api"
 import config from "../../config"
 import classes from "./index.module.css"
-import {getCountryFromLocalStrage, getCurrentPosition, parseQuery, setCountryFromLocalStrage} from "../../utility"
+import {getCountryFromLocalStorage, getCurrentPosition, parseQuery, setCountryFromLocalStorage} from "../../utility"
 import Notes from "./Notes";
 import MeetupSelect from "./MeetupSelect";
 import EventsView from "./EventsView";
@@ -17,7 +17,7 @@ const getCountryCode = (): string => {
   if (query.country && typeof query.country === "string") {
     return query.country.toUpperCase()
   }
-  const country = getCountryFromLocalStrage();
+  const country = getCountryFromLocalStorage();
   if (country) {
     return country
   }
@@ -30,7 +30,7 @@ const Index: React.FC = () => {
 
   const saveCountry = (state: string) => {
     setCountry(state)
-    setCountryFromLocalStrage(state)
+    setCountryFromLocalStorage(state)
   }
 
   useEffect(() => {

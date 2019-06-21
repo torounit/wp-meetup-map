@@ -12,10 +12,5 @@ export const getCurrentPosition = () => {
   })
 }
 
-export const getCountryFromLocalStrage = (): string | null => {
-  return localStorage.getItem("country")
-}
-
-export const setCountryFromLocalStrage = (value: string) => {
-  localStorage.setItem("country", value)
-}
+export const getCountryFromLocalStorage = (): string | null => localStorage.getItem("country")
+export const setCountryFromLocalStorage = (value: string):void => localStorage.setItem("country", value)
