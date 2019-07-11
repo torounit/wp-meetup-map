@@ -45,7 +45,7 @@ const isOptionProps = (options: any): options is OptionProp[] => Array.isArray(o
 
 class Select extends Component<Props, {}> {
 
-  private selectElement: React.RefObject<HTMLSelectElement>;
+  private readonly selectElement: React.RefObject<HTMLSelectElement>;
 
   constructor(props: Props) {
     super(props)
