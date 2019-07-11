@@ -2,7 +2,6 @@ import React, {ChangeEvent} from "react";
 import {chain, isEqual} from "lodash"
 import Select, {OptionProp} from "../Select";
 import {MeetupEvent} from "../Events";
-
 const getMeetups = (meetupEvents: MeetupEvent[]): Array<{ meetup: string; meetup_url: string }> =>
   chain<MeetupEvent>(meetupEvents)
     .filter(({meetup}) => !!meetup)
@@ -24,12 +23,15 @@ interface Props {
   onChange?: (event: ChangeEvent<HTMLSelectElement>) => void
 }
 
-const MeetupSelect: React.FC<Props> = ({meetupEvents, onChange, ...props}) => (
-  <Select
-    {...props}
-    options={createMeetupOptionProps(meetupEvents)}
-    onChange={onChange}
-  />
-)
+const MeetupSelect: React.FC<Props> = ({meetupEvents, onChange, ...props}) => {
+
+  return (
+    <Select
+      {...props}
+      options={createMeetupOptionProps(meetupEvents)}
+      onChange={onChange}
+    />
+  );
+}
 
 export default MeetupSelect
