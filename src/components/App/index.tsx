@@ -1,10 +1,10 @@
 import React from "react"
 import CountrySelect from "../CountrySelect"
-import { MeetupEvent } from "../Events"
-import { fetchCountryCode, fetchEvents } from "../../api"
+import {MeetupEvent} from "../Events"
+import {fetchCountryCode, fetchEvents} from "../../api"
 import config from "../../config"
 import classes from "./index.module.css"
-import { getCountryFromLocalStorage, getCurrentPosition, parseQuery, setCountryFromLocalStorage } from "../../utility"
+import {getCountryFromLocalStorage, getCurrentPosition, parseQuery, setCountryFromLocalStorage} from "../../utility"
 import Notes from "./Notes"
 import MeetupSelect from "./MeetupSelect"
 import EventsView from "./EventsView"
@@ -51,12 +51,10 @@ const useCountryState = (): [string, (state: string) => void] => {
 }
 
 /**
- * App Components.
- * @constructor
+ * Fetch Meetup Events.
+ * @param {string} country
  */
-const Index: React.FC = () => {
-  const [country, setCountry] = useCountryState()
-
+const useMeetupEvents = (country:string): Array<MeetupEvent> => {
   const [meetupEvents, setMeetupEvents] = useState<Array<MeetupEvent>>([])
   useEffect(() => {
     (async () => {
@@ -67,20 +65,28 @@ const Index: React.FC = () => {
     })()
   }, [country])
 
+  return meetupEvents
+}
+
+const filterMeetupGroupEvents = (meetupEvents:MeetupEvent[], meetup:string):MeetupEvent[] => {
+  return meetupEvents.filter(meetupEvent => {
+    if (!meetup) {
+      return true
+    }
+    return meetupEvent.meetup && meetupEvent.meetup.includes(meetup)
+  });
+}
+
+/**
+ * App Components.
+ * @constructor
+ */
+const Index: React.FC = () => {
+  const [country, setCountry] = useCountryState()
+  const meetupEvents = useMeetupEvents(country)
+
   const [meetup, setMeetup] = useState<string>("")
   useEffect(() => setMeetup(""), [meetupEvents])
-
-
-  const [selectedEvents, setSelectedEvents] = useState<Array<MeetupEvent>>([])
-  useEffect(() => {
-    const filteredEvents = meetupEvents.filter(meetupEvent => {
-      if (!meetup) {
-        return true
-      }
-      return meetupEvent.meetup && meetupEvent.meetup.includes(meetup)
-    })
-    setSelectedEvents(filteredEvents)
-  }, [meetup, meetupEvents])
 
   const [mode, setMode] = useState<"map" | "events">("map")
   const [showNotes, setShowNotes] = useState<boolean>(false)
@@ -100,7 +106,7 @@ const Index: React.FC = () => {
         <MeetupSelect label="Meetup:" meetupEvents={meetupEvents} onChange={e => setMeetup(e.target.value)} />
       </header>
       <main className={classes.main}>
-        <EventsView meetupEvents={selectedEvents} />
+        <EventsView meetupEvents={filterMeetupGroupEvents(meetupEvents,meetup)} />
       </main>
       <footer className={classes.footer}>
         <div className={classes.menu}>
