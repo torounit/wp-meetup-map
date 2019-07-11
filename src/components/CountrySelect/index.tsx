@@ -16,9 +16,20 @@ const CountrySelect: React.FC<any> = ({value, onChange, ...props}) => {
         const {name, region} = country
         return {
           value: country["alpha-2"],
-          label: name,
+          label: `${country["alpha-2"]} : ${name}`,
           group: region,
         }
+      })
+      .sort( (a,b) => {
+        const nameA = a.label.toUpperCase();
+        const nameB = b.label.toUpperCase();
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        return 0;
       })
       .filter(({group}) => group),
     "group"

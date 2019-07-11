@@ -21,9 +21,7 @@ export interface Props extends SelectHTMLAttributes<Element> {
 const Options: React.FC<{ options: OptionProp[] }> = ({ options }) => (
   <Fragment>
     {options.map(({ label, value }, i) => (
-      <option key={i} label={label} value={value}>
-        {label}
-      </option>
+      <option key={i} label={label} value={value}/>
     ))}
   </Fragment>
 )
