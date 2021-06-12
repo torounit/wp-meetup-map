@@ -11,7 +11,7 @@
     "@types/react-dom": "16.8.4",
     "@types/react-leaflet": "^2.2.1",
     "leaflet": "^1.5.1",
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.21",
     "moment": "^2.24.0",
     "query-string": "^6.5.0",
     "react": "^16.8.6",
