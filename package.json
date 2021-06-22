@@ -32,7 +32,7 @@
     "tslint-plugin-prettier": "^2.0.1"
   },
   "scripts": {
-    "install": "napa lukes/ISO-3166-Countries-with-Regional-Codes",
+    "install": "curl -L --output ./src/data/iso-3166.json --create-dirs https://raw.githubusercontent.com/lukes/ISO-3166-Countries-with-Regional-Codes/master/all/all.json",
     "start": "react-app-rewired start",
     "build": "react-app-rewired  build",
     "test": "react-app-rewired test"

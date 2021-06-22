@@ -14,7 +14,7 @@ type Country = {
   "intermediate-region-code": string
 }
 
-declare module 'ISO-3166-Countries-with-Regional-Codes/all/all.json' {
-  const countries: Country[];
-  export default countries;
+declare module "*iso-3316.json" {
+  const countries: Country[]
+  export default countries
 }
