@@ -34,16 +34,6 @@ export default defineConfig({
                 statuses: [0, 200]
               }
             }
-          },
-          {
-            urlPattern: /^https:\/\/cdn\.jsdelivr\.net\/.+/,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'jsdelivr',
-              expiration: {
-                maxAgeSeconds: 60 * 60 * 24
-              }
-            }
           }
         ]
       },
