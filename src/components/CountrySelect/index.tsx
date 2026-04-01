@@ -31,7 +31,7 @@ const CountrySelect: React.FC<any> = ({ value, onChange, ...props }) => {
         }
         return 0
       })
-      .filter(({ group }) => group),
+      .filter(({ group }) => group) as CountryData[],
     "group"
   )
 
