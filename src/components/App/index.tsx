@@ -41,9 +41,15 @@ const useCountryState = (): [string, (state: string) => void] => {
       if (code) {
         saveCountry(code)
       } else {
-        const position = await getCurrentPosition()
-        code = await fetchCountryCode(position.coords.latitude, position.coords.longitude)
-        saveCountry(code)
+        try {
+          const position = await getCurrentPosition()
+          if (position) {
+            code = await fetchCountryCode(position.coords.latitude, position.coords.longitude)
+          }
+          saveCountry(code || defaultCountry)
+        } catch (error) {
+          saveCountry(defaultCountry)
+        }
       }
     })()
   }, [])
