@@ -22,6 +22,20 @@ export default defineConfig({
             }
           },
           {
+            urlPattern: /^https:\/\/[a-c]\.tile\.openstreetmap\.org\/.+/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'osm-tiles',
+              expiration: {
+                maxEntries: 1000,
+                maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
+              },
+              cacheableResponse: {
+                statuses: [0, 200]
+              }
+            }
+          },
+          {
             urlPattern: /^https:\/\/cdn\.jsdelivr\.net\/.+/,
             handler: 'CacheFirst',
             options: {
