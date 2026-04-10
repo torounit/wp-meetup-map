@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "leaflet": "^1.9.4",
-    "lodash": "^4.17.21",
+    "lodash": "^4.18.1",
     "moment": "^2.29.4",
     "query-string": "^8.1.0",
     "react": "^18.2.0",
